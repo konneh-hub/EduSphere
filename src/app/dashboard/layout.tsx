@@ -1,14 +1,10 @@
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { DashboardShell } from "@/components/layout/DashboardShell";
-import { getSession } from "@/lib/auth/session";
+import { requireSession } from "@/lib/auth/authorization";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  const session = await getSession();
-
-  if (!session) {
-    redirect("/login");
-  }
+  const user = await requireSession();
 
   return <DashboardShell>{children}</DashboardShell>;
 }
