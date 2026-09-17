@@ -9,7 +9,7 @@ export async function GET() {
 
   if (!process.env.DATABASE_URL) {
     return NextResponse.json(
-      apiError("DATABASE_URL is not configured", "DATABASE_NOT_CONFIGURED"),
+      apiError("DATABASE_NOT_CONFIGURED", "DATABASE_URL is not configured"),
       { status: 503 },
     );
   }
@@ -28,7 +28,7 @@ export async function GET() {
     );
   } catch {
     return NextResponse.json(
-      apiError("Database health check failed", "DATABASE_UNAVAILABLE"),
+      apiError("DATABASE_UNAVAILABLE", "Database health check failed"),
       { status: 503 },
     );
   }
