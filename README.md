@@ -119,6 +119,8 @@ or:
 }
 ```
 
+Authentication APIs follow this envelope as well.
+
 ## Current scope boundary
 
 The current implementation establishes the application foundation, relational database, authentication/session security, RBAC helpers and tenant-isolation primitives. It does **not** yet implement school/user CRUD services, admissions workflows, attendance workflows, examination processing, result approval workflows, payment processing, notification delivery or reporting APIs.
