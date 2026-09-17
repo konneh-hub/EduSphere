@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EduSphere
 
-## Getting Started
+EduSphere is a multi-tenant school management platform for primary and secondary schools. The architecture is based on a single hosted Next.js application serving independent school tenants with isolated data and configurable academic and fee settings.
 
-First, run the development server:
+## Phase 1 — Foundation
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+This branch establishes the application foundation described by the EduSphere SRS and development plan. The repository currently uses Next.js App Router, TypeScript, and Tailwind CSS. The existing repository is a fresh Next.js application, so Phase 1 replaces the starter UI with the agreed foundation without implementing business workflows.
+
+### Foundation structure
+
+```text
+.
+├── prisma/                         # Database/Prisma foundation; implemented in Phase 2
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/                 # Authentication routes; Phase 3
+│   │   ├── dashboard/              # Shared dashboard shell
+│   │   ├── students/               # Phase 7
+│   │   ├── teachers/               # Phase 8
+│   │   ├── parents/                # Phase 8
+│   │   ├── classes/                # Phase 6
+│   │   ├── subjects/               # Phase 6
+│   │   ├── academics/              # Phase 6
+│   │   ├── attendance/             # Phase 9
+│   │   ├── examinations/           # Phase 10
+│   │   ├── results/                # Phase 11
+│   │   ├── finance/                # Phase 12
+│   │   ├── library/                # Phase 13
+│   │   ├── inventory/              # Phase 14
+│   │   ├── notifications/          # Phase 15
+│   │   ├── reports/                # Phase 16
+│   │   ├── settings/               # Administration/settings phases
+│   │   └── api/
+│   │       └── health/             # Initial infrastructure health endpoint
+│   ├── components/
+│   │   ├── forms/                  # Shared form components
+│   │   ├── layout/                 # Root/dashboard layout components
+│   │   ├── shared/                 # Cross-module components
+│   │   └── ui/                     # Reusable UI primitives
+│   ├── config/                     # Application configuration
+│   ├── hooks/                      # Shared React hooks
+│   ├── lib/
+│   │   ├── api/                    # API contracts/helpers
+│   │   └── db/                     # Database access layer; Phase 2
+│   └── types/                      # Shared TypeScript types
+├── .env.example
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## API convention
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+API Route Handlers live under `src/app/api`. Responses use a consistent envelope:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```json
+{ "success": true, "data": {} }
+```
 
-## Learn More
+or:
 
-To learn more about Next.js, take a look at the following resources:
+```json
+{
+  "success": false,
+  "error": { "code": "ERROR_CODE", "message": "Human-readable message" }
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See `src/lib/api/README.md` for the foundation rules. The first endpoint is `GET /api/health` and performs no database or business operation.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment
 
-## Deploy on Vercel
+Copy `.env.example` to `.env.local` for local development. Real secrets must never be committed. Database and authentication variables are intentionally placeholders for their later phases.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Run locally
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Phase 1 scope boundary
+
+Phase 1 does **not** implement authentication, authorization, tenant management, students, teachers, parents, academics, attendance, examinations, results, finance, library, inventory, notifications, reporting, or other business workflows. Those modules have only been scaffolded so later phases have stable route boundaries.
+
+The foundation also does not create fake records, mock dashboards, placeholder business metrics, or simulated workflows.
