@@ -40,10 +40,7 @@ export async function getSession(): Promise<SessionPayload | null> {
   if (!token) return null;
 
   try {
-    const { payload } = await jwtVerify<SessionPayload>(token, getSecret(), {
-      algorithms: ["HS256"],
-    });
-
+    const { payload } = await jwtVerify<SessionPayload>(token, getSecret(), { algorithms: ["HS256"] });
     if (!payload.userId || !payload.schoolId || !payload.roleId) return null;
     return payload;
   } catch {
