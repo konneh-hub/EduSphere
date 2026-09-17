@@ -19,5 +19,5 @@ export async function POST() {
   }
 
   await clearSession();
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ success: true, data: null });
 }
