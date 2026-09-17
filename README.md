@@ -33,7 +33,7 @@ The database includes schools, users, roles, permissions, students, parents/guar
 
 ## Phase 3 — Authentication and session security
 
-The same branch contains the authentication foundation:
+The branch contains:
 
 - bcrypt password hashing and verification.
 - Signed HTTP-only, same-site session cookies using `jose`.
@@ -42,14 +42,14 @@ The same branch contains the authentication foundation:
 - Protected dashboard server layout.
 - Login/logout audit events.
 - Last-login timestamp updates.
-- Authenticated-user endpoint at `GET /api/auth/me`.
+- `GET /api/auth/me` for the authenticated user context.
 - No public registration, password reset workflow, demo credentials or fake users.
 
 ## Phase 4 — RBAC and tenant-isolation foundation
 
-Authorization now uses the live database user record rather than trusting role/status values stored only inside the session token.
+Authorization uses the live database user record rather than trusting role/status values stored only inside the session token.
 
-### Server authorization helpers
+### Server security helpers
 
 ```text
 src/lib/auth/
@@ -68,11 +68,11 @@ src/lib/
 
 The security layer provides:
 
-- `getCurrentUser()` — resolves the authenticated active user inside their authenticated school.
+- `getCurrentUser()` — resolves an authenticated active user inside their authenticated school.
 - `hasPermission(resource, action)` — checks the database `RolePermission` mapping.
 - `requirePermission()` / `requirePermissionOrThrow()` — server-side permission enforcement.
 - `requireRole()` — explicit role enforcement where a workflow requires it.
-- `requireApiUser()` — standardized 401 handling for API routes.
+- `requireApiUser()` — standardized 401 handling for protected API routes.
 - `requireApiPermission()` — standardized 401/403 handling for protected API routes.
 - `requireSchoolScope()` — obtains the authenticated tenant boundary.
 - `schoolScopeFilter()` — supplies the server-derived `schoolId` filter for school-owned models.
