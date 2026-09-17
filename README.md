@@ -12,7 +12,7 @@ The database layer has now been expanded to cover the SRS core scope. The SRS de
 
 ### Prisma organization
 
-The Prisma schema is now organized into multiple `.prisma` files under `prisma/` while keeping `prisma/schema.prisma` as the main generator/datasource file. Prisma supports multi-file schemas in current Prisma 6 releases.
+The Prisma schema is organized into multiple `.prisma` files under `prisma/` while keeping `prisma/schema.prisma` as the main generator/datasource file.
 
 ```text
 prisma/
@@ -27,38 +27,11 @@ prisma/
 
 ### Database coverage
 
-The database now includes:
-
-- Schools and school configuration
-- Users, roles, permissions and role-permission mapping
-- Students, parents, guardians and parent/student relationships
-- Student documents and admission records
-- Teachers, qualifications and employee records
-- Departments, classes and streams
-- Subjects and teacher/class assignments
-- Academic years, terms and academic calendar
-- Timetables
-- Student and teacher attendance
-- Assessments and marks
-- Examinations and examination schedules
-- Result calculation data, approval states and publication states
-- Grading policies and report cards
-- Student enrollment, promotion, transfer and withdrawal records
-- Fee categories and fee structures
-- Discounts and scholarships
-- Invoices, payments and receipts
-- Library categories, authors, books, book copies and borrowings
-- Inventory categories, suppliers, inventory items, purchases and stock movements
-- Announcements and notifications
-- School settings
-- Documents
-- Audit logs
-
-These areas correspond to the SRS scope covering admissions, student/teacher/parent management, academics, attendance, examinations, results, finance, library, inventory, communication, reports and system administration.
+The database includes schools, users, roles, permissions, students, parents/guardians, teachers, departments, classes, streams, subjects, academic years, terms, admissions, attendance, timetables, assessments, examinations, marks, results, report cards, grading policies, promotion, transfer, withdrawal, fees, discounts, scholarships, invoices, payments, receipts, library, inventory, announcements, notifications, settings, documents and audit logs.
 
 ### Tenant/data isolation foundation
 
-`School` is the top-level school ownership boundary. School-owned records carry a direct school relationship or belong to a school-owned parent record. The future authentication and authorization layers must derive the active school from the authenticated server-side context and must not trust arbitrary school IDs supplied by clients.
+`School` is the top-level school ownership boundary. School-owned records carry a direct school relationship or belong to a school-owned parent record. Authentication and authorization must derive the active school from the authenticated server-side context and must not trust arbitrary school IDs supplied by clients.
 
 ### Database commands
 
@@ -85,7 +58,35 @@ No production database credentials or seed records are committed.
 
 ### CI validation
 
-`.github/workflows/database.yml` validates the Prisma schema and generates Prisma Client on relevant pushes and pull requests. This gives the database foundation an automated schema check before later business logic is added.
+`.github/workflows/database.yml` validates the Prisma schema and generates Prisma Client on relevant pushes and pull requests.
+
+## Phase 3 — Authentication and authorization foundation
+
+The same branch now contains the initial security foundation:
+
+- Password hashing and verification with bcrypt.
+- Signed, HTTP-only, same-site session cookies using `jose`.
+- School-scoped login using school code + email + password.
+- Account status enforcement before session creation.
+- Server-side dashboard protection that redirects unauthenticated users to `/login`.
+- Server-side permission lookup through the existing `RolePermission` model.
+- Login and logout audit events through the existing `AuditLog` model.
+- Last-login timestamp updates.
+- No public registration, password reset workflow, demo credentials or fake users have been added.
+
+### Authentication environment
+
+`.env.example` contains `AUTH_SECRET`. Set a cryptographically random value of at least 32 characters in `.env.local` before using authentication.
+
+Example PowerShell command:
+
+```powershell
+$bytes = New-Object byte[] 32
+[System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
+[Convert]::ToBase64String($bytes)
+```
+
+The generated value should be assigned to `AUTH_SECRET`; do not commit it.
 
 ## API health check
 
@@ -108,12 +109,8 @@ or:
 }
 ```
 
-## Environment
-
-Copy `.env.example` to `.env.local` and set `DATABASE_URL` to a PostgreSQL connection string. Never commit real credentials or secrets.
-
 ## Current scope boundary
 
-This phase establishes the complete relational database foundation, not the business application itself. It deliberately does **not** implement authentication, session management, authorization enforcement, CRUD service actions, admissions workflows, attendance workflows, examination processing, result approval workflows, payment processing, notification delivery or reporting APIs.
+The current implementation establishes the foundation, relational database and authentication/session security layers. It does **not** yet implement school/user CRUD services, admissions workflows, attendance workflows, examination processing, result approval workflows, payment processing, notification delivery or reporting APIs.
 
 There is intentionally no fake business data, demo users, fake schools, fake students or simulated dashboard statistics.
