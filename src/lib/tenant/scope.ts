@@ -1,4 +1,3 @@
-import type { Prisma } from "@prisma/client";
 import { getCurrentUser } from "@/lib/auth/current-user";
 
 export async function requireSchoolScope() {
@@ -8,12 +7,13 @@ export async function requireSchoolScope() {
 }
 
 /**
- * Adds the authenticated school's tenant boundary to a Prisma where clause.
- * Use this helper for models that contain a direct schoolId field.
+ * Returns the authenticated tenant boundary for models with a direct schoolId.
+ * Always merge this value into server-side Prisma filters; never accept a
+ * client-provided schoolId as the tenant boundary.
  */
-export async function schoolWhere<T extends Prisma.UserWhereInput>(where: T): Promise<T & Prisma.UserWhereInput> {
-  const scope = await requireSchoolScope();
-  return { ...where, schoolId: scope.schoolId } as T & Prisma.UserWhereInput;
+export async function schoolScopeFilter() {
+  const { schoolId } = await requireSchoolScope();
+  return { schoolId } as const;
 }
 
 export async function assertSameSchool(entitySchoolId: string) {
