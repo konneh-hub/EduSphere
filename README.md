@@ -8,11 +8,11 @@ The `phase-1-foundation` branch establishes the Next.js App Router foundation, s
 
 ## Phase 2 — PostgreSQL + Prisma database foundation
 
-Phase 2 adds the relational database foundation described by the School Management System SRS. The SRS specifies Next.js as the full-stack framework, PostgreSQL as the database and Prisma as the ORM. fileciteturn56file1L60-L71
+Phase 2 adds the relational database foundation described by the School Management System SRS. The SRS specifies Next.js as the full-stack framework, PostgreSQL as the database and Prisma as the ORM.
 
 ### Database coverage
 
-The Prisma schema includes the SRS database areas: schools, users, roles, permissions, students, parents, teachers, classes, subjects, academic years, terms, enrollments, attendance, assessments, marks, results, fees, invoices, payments, books, borrowings, notifications and audit logs. The SRS database design explicitly associates users and operational records with a school boundary. fileciteturn56file1L76-L83 fileciteturn63file0L12-L46 fileciteturn61file0L21-L104
+The Prisma schema includes the SRS database areas: schools, users, roles, permissions, students, parents, teachers, classes, subjects, academic years, terms, enrollments, attendance, assessments, marks, results, fees, invoices, payments, books, borrowings, notifications and audit logs. The database design associates users and operational records with a school boundary.
 
 ### Phase 2 files
 
