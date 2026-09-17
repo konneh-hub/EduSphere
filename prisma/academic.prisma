@@ -27,6 +27,7 @@ model SchoolClass {
   assessments Assessment[]
   examinationSchedules ExaminationSchedule[]
   timetable TimetableEntry[]
+  feeStructures FeeStructure[]
   promotionFrom Promotion[] @relation("PromotionFrom")
   promotionTo Promotion[] @relation("PromotionTo")
   transferFrom Transfer[] @relation("TransferFrom")
