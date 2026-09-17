@@ -1,52 +1,64 @@
 # EduSphere
 
-EduSphere is a multi-tenant school management platform for primary and secondary schools. The architecture is based on a single hosted Next.js application serving independent school tenants with isolated data and configurable academic and fee settings.
+EduSphere is a multi-tenant school management platform for primary and secondary schools. The application uses a single hosted Next.js full-stack application with PostgreSQL and Prisma, with school ownership represented explicitly in the data model.
 
 ## Phase 1 — Foundation
 
-This branch establishes the application foundation described by the EduSphere SRS and development plan. The repository currently uses Next.js App Router, TypeScript, and Tailwind CSS. The existing repository is a fresh Next.js application, so Phase 1 replaces the starter UI with the agreed foundation without implementing business workflows.
+The `phase-1-foundation` branch establishes the Next.js App Router foundation, shared layouts, UI directories, route boundaries, API conventions and application states without implementing business workflows.
 
-### Foundation structure
+## Phase 2 — PostgreSQL + Prisma database foundation
+
+Phase 2 adds the relational database foundation described by the School Management System SRS. The SRS specifies Next.js as the full-stack framework, PostgreSQL as the database and Prisma as the ORM. fileciteturn56file1L60-L71
+
+### Database coverage
+
+The Prisma schema includes the SRS database areas: schools, users, roles, permissions, students, parents, teachers, classes, subjects, academic years, terms, enrollments, attendance, assessments, marks, results, fees, invoices, payments, books, borrowings, notifications and audit logs. The SRS database design explicitly associates users and operational records with a school boundary. fileciteturn56file1L76-L83 fileciteturn63file0L12-L46 fileciteturn61file0L21-L104
+
+### Phase 2 files
 
 ```text
-.
-├── prisma/                         # Database/Prisma foundation; implemented in Phase 2
-├── public/
-├── src/
-│   ├── app/
-│   │   ├── (auth)/                 # Authentication routes; Phase 3
-│   │   ├── dashboard/              # Shared dashboard shell
-│   │   ├── students/               # Phase 7
-│   │   ├── teachers/               # Phase 8
-│   │   ├── parents/                # Phase 8
-│   │   ├── classes/                # Phase 6
-│   │   ├── subjects/               # Phase 6
-│   │   ├── academics/              # Phase 6
-│   │   ├── attendance/             # Phase 9
-│   │   ├── examinations/           # Phase 10
-│   │   ├── results/                # Phase 11
-│   │   ├── finance/                # Phase 12
-│   │   ├── library/                # Phase 13
-│   │   ├── inventory/              # Phase 14
-│   │   ├── notifications/          # Phase 15
-│   │   ├── reports/                # Phase 16
-│   │   ├── settings/               # Administration/settings phases
-│   │   └── api/
-│   │       └── health/             # Initial infrastructure health endpoint
-│   ├── components/
-│   │   ├── forms/                  # Shared form components
-│   │   ├── layout/                 # Root/dashboard layout components
-│   │   ├── shared/                 # Cross-module components
-│   │   └── ui/                     # Reusable UI primitives
-│   ├── config/                     # Application configuration
-│   ├── hooks/                      # Shared React hooks
-│   ├── lib/
-│   │   ├── api/                    # API contracts/helpers
-│   │   └── db/                     # Database access layer; Phase 2
-│   └── types/                      # Shared TypeScript types
-├── .env.example
+prisma/
+├── schema.prisma
 └── README.md
+
+src/lib/db/
+├── index.ts
+└── prisma.ts
+
+src/lib/env.ts
+src/app/api/health/route.ts
 ```
+
+### Tenant boundary
+
+`School` is the top-level school boundary. School-owned records reference the owning school directly or through a school-owned parent entity. Later service and authorization layers must always derive the school context from the authenticated user rather than accepting an arbitrary school identifier from the client.
+
+### API health check
+
+`GET /api/health` now performs a real PostgreSQL connectivity check. It returns `503` when `DATABASE_URL` is missing or the database cannot be reached; it does not fabricate a healthy database state.
+
+## Database commands
+
+```bash
+npm install
+npm run db:validate
+npm run db:generate
+npm run db:push
+```
+
+For versioned migrations:
+
+```bash
+npm run db:migrate
+```
+
+For Prisma Studio:
+
+```bash
+npm run db:studio
+```
+
+No seed script or fake records are included.
 
 ## API convention
 
@@ -65,23 +77,12 @@ or:
 }
 ```
 
-See `src/lib/api/README.md` for the foundation rules. The first endpoint is `GET /api/health` and performs no database or business operation.
-
 ## Environment
 
-Copy `.env.example` to `.env.local` for local development. Real secrets must never be committed. Database and authentication variables are intentionally placeholders for their later phases.
+Copy `.env.example` to `.env.local` and set `DATABASE_URL` to a PostgreSQL connection string. Never commit real credentials or secrets.
 
-## Run locally
+## Current scope boundary
 
-```bash
-npm install
-npm run dev
-```
+Phase 2 defines the database structure and access foundation only. It does **not** implement authentication, authorization, admissions, student workflows, teacher workflows, attendance workflows, examination processing, result publication, finance operations, library workflows, reporting, notifications delivery, or other business operations.
 
-Open `http://localhost:3000`.
-
-## Phase 1 scope boundary
-
-Phase 1 does **not** implement authentication, authorization, tenant management, students, teachers, parents, academics, attendance, examinations, results, finance, library, inventory, notifications, reporting, or other business workflows. Those modules have only been scaffolded so later phases have stable route boundaries.
-
-The foundation also does not create fake records, mock dashboards, placeholder business metrics, or simulated workflows.
+There is intentionally no mock data, demo seed, fake dashboard metrics or simulated workflow.
