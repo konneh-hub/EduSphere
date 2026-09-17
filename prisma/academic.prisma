@@ -5,9 +5,7 @@ enum AssessmentType { TEST QUIZ ASSIGNMENT PROJECT EXAM OTHER }
 enum ResultStatus { DRAFT SUBMITTED APPROVED PUBLISHED LOCKED }
 enum ExaminationStatus { DRAFT SCHEDULED IN_PROGRESS COMPLETED PUBLISHED }
 enum PromotionStatus { PENDING APPROVED REJECTED }
-
 enum TransferStatus { REQUESTED APPROVED COMPLETED REJECTED }
-
 enum WithdrawalStatus { REQUESTED APPROVED COMPLETED REJECTED }
 
 model SchoolClass {
@@ -29,6 +27,10 @@ model SchoolClass {
   assessments Assessment[]
   examinationSchedules ExaminationSchedule[]
   timetable TimetableEntry[]
+  promotionFrom Promotion[] @relation("PromotionFrom")
+  promotionTo Promotion[] @relation("PromotionTo")
+  transferFrom Transfer[] @relation("TransferFrom")
+  transferTo Transfer[] @relation("TransferTo")
   @@unique([schoolId, name, section])
   @@index([schoolId, level])
 }
