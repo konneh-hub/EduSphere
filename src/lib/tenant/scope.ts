@@ -8,8 +8,8 @@ export async function requireSchoolScope() {
 
 /**
  * Returns the authenticated tenant boundary for models with a direct schoolId.
- * Always merge this value into server-side Prisma filters; never accept a
- * client-provided schoolId as the tenant boundary.
+ * Server code must merge this filter into Prisma queries instead of trusting
+ * a schoolId supplied by a client.
  */
 export async function schoolScopeFilter() {
   const { schoolId } = await requireSchoolScope();
