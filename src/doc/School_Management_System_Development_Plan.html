@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>School Management System — Development Plan</title>
+<style>
+:root{
+  --primary:#123B6D;
+  --secondary:#0F766E;
+  --accent:#F59E0B;
+  --dark:#172033;
+  --text:#374151;
+  --muted:#6B7280;
+  --bg:#F4F7FB;
+  --white:#fff;
+  --border:#DDE3EA;
+  --success:#166534;
+  --danger:#991B1B;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.cover{
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--primary),var(--secondary));
+  color:#fff;display:flex;justify-content:center;align-items:center;
+  text-align:center;padding:60px 20px
+}
+.cover-content{max-width:950px}
+.logo{
+  width:115px;height:115px;margin:auto;background:#fff;color:var(--primary);
+  border-radius:28px;display:flex;align-items:center;justify-content:center;
+  font-size:38px;font-weight:800;box-shadow:0 15px 40px rgba(0,0,0,.18)
+}
+.cover h1{font-size:48px;line-height:1.15;margin:30px 0 12px}
+.cover h2{font-size:25px;font-weight:400;margin:0 0 18px}
+.cover p{opacity:.92;margin:7px}
+.layout{display:flex;max-width:1500px;margin:auto}
+.sidebar{
+  width:285px;position:sticky;top:0;height:100vh;overflow-y:auto;
+  background:#fff;border-right:1px solid var(--border);padding:25px 18px
+}
+.sidebar h3{color:var(--primary);margin:0 0 15px;font-size:18px}
+.sidebar a{
+  display:block;text-decoration:none;color:var(--text);padding:8px 10px;
+  border-radius:7px;font-size:14px;margin:2px 0
+}
+.sidebar a:hover{background:#EEF6FF;color:var(--primary)}
+.content{flex:1;min-width:0;background:#fff;padding:55px 65px}
+h1,h2,h3,h4{color:var(--primary);line-height:1.3}
+h2{font-size:30px;margin-top:65px;border-bottom:3px solid var(--secondary);padding-bottom:9px}
+h3{font-size:22px;margin-top:35px}
+h4{font-size:18px}
+p{margin:12px 0}
+ul,ol{padding-left:28px}
+li{margin:6px 0}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:25px 0}
+.card{border:1px solid var(--border);border-radius:12px;padding:20px;background:#fff}
+.card h3{margin-top:0}
+.highlight,.warning,.success{
+  padding:20px 22px;margin:24px 0;border-radius:10px
+}
+.highlight{background:#EEF6FF;border-left:5px solid var(--primary)}
+.warning{background:#FFF8E7;border-left:5px solid var(--accent)}
+.success{background:#ECFDF5;border-left:5px solid var(--success)}
+.danger{background:#FEF2F2;border-left:5px solid var(--danger)}
+table{width:100%;border-collapse:collapse;margin:20px 0 30px}
+th{background:var(--primary);color:#fff}
+th,td{border:1px solid var(--border);padding:11px;text-align:left;vertical-align:top}
+tr:nth-child(even){background:#F9FAFB}
+pre{
+  background:#111827;color:#E5E7EB;padding:22px;border-radius:10px;
+  overflow-x:auto;line-height:1.55;font-size:14px
+}
+code{background:#EEF2F7;padding:2px 5px;border-radius:4px}
+pre code{background:none;padding:0}
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:22px 0}
+.flow-box{background:var(--primary);color:#fff;padding:10px 15px;border-radius:8px;font-weight:600}
+.arrow{font-size:22px;color:var(--secondary);font-weight:bold}
+.phase{
+  border:1px solid var(--border);border-radius:14px;margin:38px 0;
+  padding:0 28px 28px;background:#fff;box-shadow:0 4px 16px rgba(23,32,51,.05)
+}
+.phase-title{
+  margin:0 -28px 22px;padding:17px 25px;background:var(--primary);
+  color:#fff;border-radius:14px 14px 0 0;font-size:24px;font-weight:700
+}
+.phase-title span{opacity:.8;font-size:15px;margin-right:8px}
+.badge{
+  display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;
+  font-weight:700;margin-right:5px;background:#E8F1FA;color:var(--primary)
+}
+.checklist{list-style:none;padding-left:0}
+.checklist li{padding-left:28px;position:relative}
+.checklist li:before{content:"✓";position:absolute;left:0;color:var(--success);font-weight:800}
+.donot{list-style:none;padding-left:0}
+.donot li{padding-left:28px;position:relative}
+.donot li:before{content:"✕";position:absolute;left:0;color:var(--danger);font-weight:800}
+footer{text-align:center;color:var(--muted);padding:45px;border-top:1px solid var(--border);margin-top:60px}
+@media(max-width:1000px){
+  .sidebar{display:none}
+  .content{padding:35px 25px}
+  .card-grid{grid-template-columns:1fr}
+}
+@media(max-width:650px){
+  .cover h1{font-size:35px}
+  .cover h2{font-size:20px}
+  .content{padding:25px 18px}
+  h2{font-size:25px}
+  .phase{padding:0 18px 20px}
+  .phase-title{margin:0 -18px 20px;padding:15px 18px;font-size:21px}
+  .flow-box{font-size:13px}
+}
+@media print{
+  .sidebar{display:none}
+  .content{padding:20px}
+  .cover{min-height:auto;padding:80px 20px}
+  .phase{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="cover-content">
+    <div class="logo">SMS</div>
+    <h1>School Management System</h1>
+    <h2>Complete Development Plan</h2>
+    <p>Phase-by-phase implementation roadmap derived from the Software Requirements Specification</p>
+    <p><strong>Architecture:</strong> Next.js Full-Stack + TypeScript + PostgreSQL + Prisma</p>
+    <p>Version 1.0 — September 2026</p>
+  </div>
+</section>
+
+<div class="layout">
+
+<aside class="sidebar">
+  <h3>Development Plan</h3>
+  <a href="#overview">Overview</a>
+  <a href="#principles">Core Development Principles</a>
+  <a href="#phase1">Phase 1 — Foundation</a>
+  <a href="#phase2">Phase 2 — Database</a>
+  <a href="#phase3">Phase 3 — Authentication</a>
+  <a href="#phase4">Phase 4 — Authorization</a>
+  <a href="#phase5">Phase 5 — Administration</a>
+  <a href="#phase6">Phase 6 — Academic Structure</a>
+  <a href="#phase7">Phase 7 — Students</a>
+  <a href="#phase8">Phase 8 — Teachers & Parents</a>
+  <a href="#phase9">Phase 9 — Attendance</a>
+  <a href="#phase10">Phase 10 — Assessments</a>
+  <a href="#phase11">Phase 11 — Results</a>
+  <a href="#phase12">Phase 12 — Finance</a>
+  <a href="#phase13">Phase 13 — Library</a>
+  <a href="#phase14">Phase 14 — Inventory</a>
+  <a href="#phase15">Phase 15 — Communication</a>
+  <a href="#phase16">Phase 16 — Reports</a>
+  <a href="#phase17">Phase 17 — Security</a>
+  <a href="#phase18">Phase 18 — Testing</a>
+  <a href="#phase19">Phase 19 — Deployment</a>
+  <a href="#phase20">Phase 20 — Future Enhancements</a>
+  <a href="#completion">Definition of Complete</a>
+  <a href="#milestones">Major Milestones</a>
+  <a href="#architecture">Final Architecture</a>
+</aside>
+
+<main class="content">
+
+<section id="overview">
+<h2>1. Development Plan Overview</h2>
+<p>
+This development plan converts the School Management System SRS into a practical implementation sequence.
+The SRS defines a full-stack school platform for primary and secondary schools, covering administration,
+students, teachers, parents, academics, attendance, examinations, results, finance, library, inventory,
+communication, reporting and system administration.
+</p>
+<div class="highlight">
+<strong>Important:</strong> The SRS does not itself define numbered development phases. The 20 phases in
+this document are a dependency-based development roadmap derived from the requirements, architecture,
+database model, security requirements and workflows contained in the SRS.
+</div>
+
+<div class="card-grid">
+  <div class="card"><h3>Foundation</h3><p>Build the Next.js application structure, shared UI and development environment.</p></div>
+  <div class="card"><h3>Data</h3><p>Design PostgreSQL and Prisma before implementing dependent business modules.</p></div>
+  <div class="card"><h3>Identity</h3><p>Implement authentication, sessions, roles and permissions.</p></div>
+  <div class="card"><h3>Academic Core</h3><p>Build school structure, students, teachers, parents and academic operations.</p></div>
+  <div class="card"><h3>Operations</h3><p>Implement attendance, results, finance, library, inventory and communication.</p></div>
+  <div class="card"><h3>Production</h3><p>Complete security, testing, backups, monitoring and deployment.</p></div>
+</div>
+
+<h3>Recommended dependency order</h3>
+<pre><code>PHASE 1   Foundation & Project Architecture
+    ↓
+PHASE 2   Database & Prisma
+    ↓
+PHASE 3   Authentication
+    ↓
+PHASE 4   Authorization & Permissions
+    ↓
+PHASE 5   School & System Administration
+    ↓
+PHASE 6   Academic Structure
+    ↓
+PHASE 7   Student Management
+    ↓
+PHASE 8   Teacher & Parent Management
+    ↓
+PHASE 9   Attendance
+    ↓
+PHASE 10  Assessments & Examinations
+    ↓
+PHASE 11  Results & Report Cards
+    ↓
+PHASE 12  Finance
+    ↓
+PHASE 13  Library
+    ↓
+PHASE 14  Inventory
+    ↓
+PHASE 15  Communication & Notifications
+    ↓
+PHASE 16  Reports & Analytics
+    ↓
+PHASE 17  Security, Audit & Data Integrity
+    ↓
+PHASE 18  Testing & Quality Assurance
+    ↓
+PHASE 19  Deployment, Backup & Monitoring
+    ↓
+PHASE 20  Future Enhancements</code></pre>
+</section>
+
+<section id="principles">
+<h2>2. Core Development Principles</h2>
+<p>Every phase should follow the same implementation cycle:</p>
+<div class="flow">
+  <div class="flow-box">Requirement</div><div class="arrow">→</div>
+  <div class="flow-box">Data Design</div><div class="arrow">→</div>
+  <div class="flow-box">Business Logic</div><div class="arrow">→</div>
+  <div class="flow-box">Permissions</div><div class="arrow">→</div>
+  <div class="flow-box">Server/API</div><div class="arrow">→</div>
+  <div class="flow-box">UI</div><div class="arrow">→</div>
+  <div class="flow-box">Test</div>
+</div>
+
+<ul class="checklist">
+  <li>Use TypeScript throughout.</li>
+  <li>Keep business logic outside UI components.</li>
+  <li>Validate all user input on the server.</li>
+  <li>Never trust client-side authorization.</li>
+  <li>Use Prisma transactions for critical operations.</li>
+  <li>Use database constraints for data integrity.</li>
+  <li>Use reusable components and shared layouts.</li>
+  <li>Use Server Components where appropriate.</li>
+  <li>Use Server Actions for appropriate mutations.</li>
+  <li>Use Route Handlers for API integrations.</li>
+  <li>Keep secrets server-side.</li>
+  <li>Log security-sensitive operations.</li>
+  <li>Test critical business logic.</li>
+</ul>
+
+<div class="danger">
+<strong>Do not use this development pattern:</strong>
+<pre><code>Create page
+    ↓
+Make it look good
+    ↓
+Add fake/static data
+    ↓
+Move to next page</code></pre>
+This creates a UI prototype rather than a functioning management system.
+</div>
+</section>
+
+<section id="phase1" class="phase">
+<div class="phase-title"><span>PHASE 1</span> Foundation & Project Architecture</div>
+<h3>Objective</h3>
+<p>Establish the Next.js application foundation before implementing business modules.</p>
+<h3>What to build</h3>
+<ul class="checklist">
+<li>Next.js App Router project.</li>
+<li>TypeScript configuration.</li>
+<li>Tailwind CSS.</li>
+<li>Global styles and design tokens.</li>
+<li>Shared layouts and navigation.</li>
+<li>Reusable UI components.</li>
+<li>Environment-variable structure.</li>
+<li>Application error/loading/not-found states.</li>
+<li>Basic route organization.</li>
+<li>Git/GitHub repository structure.</li>
+</ul>
+<h3>Application structure</h3>
+<pre><code>app/
+├── (auth)/
+├── dashboard/
+├── students/
+├── teachers/
+├── parents/
+├── classes/
+├── subjects/
+├── academics/
+├── attendance/
+├── examinations/
+├── results/
+├── finance/
+├── library/
+├── inventory/
+├── notifications/
+├── reports/
+├── settings/
+└── api/
+
+components/
+lib/
+prisma/
+hooks/
+types/
+public/
+middleware.ts</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not create a separate Express, Django or Node/Express backend.</li>
+<li>Do not create multiple independent frontend applications.</li>
+<li>Do not implement all business modules before the foundation is stable.</li>
+<li>Do not put database queries directly throughout UI components.</li>
+<li>Do not hard-code permissions into individual pages.</li>
+</ul>
+<h3>Completion condition</h3>
+<p>The application must run successfully in development and have the agreed project structure before moving to Phase 2.</p>
+</section>
+
+<section id="phase2" class="phase">
+<div class="phase-title"><span>PHASE 2</span> Database & Prisma</div>
+<h3>Objective</h3>
+<p>Design the relational data model that all future modules will use.</p>
+<h3>Core tables</h3>
+<pre><code>schools
+users
+roles
+permissions
+
+students
+parents
+teachers
+classes
+subjects
+
+academic_years
+terms
+enrollments
+
+attendance
+assessments
+marks
+results
+
+fees
+invoices
+payments
+
+books
+borrowings
+inventory_items
+notifications
+audit_logs</code></pre>
+<h3>Correct dependency structure</h3>
+<div class="flow">
+<div class="flow-box">School</div><div class="arrow">→</div>
+<div class="flow-box">Academic Year</div><div class="arrow">→</div>
+<div class="flow-box">Term</div><div class="arrow">→</div>
+<div class="flow-box">Class</div><div class="arrow">→</div>
+<div class="flow-box">Enrollment</div>
+</div>
+<div class="flow">
+<div class="flow-box">Subject</div><div class="arrow">→</div>
+<div class="flow-box">Assessment</div><div class="arrow">→</div>
+<div class="flow-box">Mark</div><div class="arrow">→</div>
+<div class="flow-box">Result</div>
+</div>
+<h3>What to implement</h3>
+<ul class="checklist">
+<li>Primary keys and foreign keys.</li>
+<li>Unique constraints.</li>
+<li>Indexes.</li>
+<li>Relationships.</li>
+<li>Enums and status fields.</li>
+<li>Timestamps.</li>
+<li>Appropriate deletion/cascade rules.</li>
+<li>Prisma migrations.</li>
+<li>Seed data for development.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not duplicate relational information unnecessarily.</li>
+<li>Do not store core relational data as arbitrary JSON when tables and relationships are appropriate.</li>
+<li>Do not allow orphan records.</li>
+<li>Do not rely only on frontend validation.</li>
+<li>Do not invent database tables independently of business requirements.</li>
+<li>Do not build every UI page first and invent the database afterward.</li>
+</ul>
+</section>
+
+<section id="phase3" class="phase">
+<div class="phase-title"><span>PHASE 3</span> Authentication & Session Management</div>
+<h3>Objective</h3>
+<p>Establish secure user identity and account lifecycle management.</p>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Login.</li>
+<li>Logout.</li>
+<li>Password reset.</li>
+<li>Account verification.</li>
+<li>Session management.</li>
+<li>Account activation.</li>
+<li>Account suspension.</li>
+<li>Session expiration.</li>
+</ul>
+<h3>Pages</h3>
+<pre><code>/login
+/register
+/forgot-password
+/reset-password</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Never store plaintext passwords.</li>
+<li>Do not use client-only authentication as the security boundary.</li>
+<li>Do not trust a role sent from the browser.</li>
+<li>Do not allow users to assign themselves privileged roles.</li>
+<li>Do not expose authentication secrets to client-side code.</li>
+</ul>
+<h3>Completion test</h3>
+<pre><code>Valid login       → authenticated dashboard
+Invalid login     → controlled error
+Logout            → session destroyed
+Suspended account → access denied
+Expired session   → access denied</code></pre>
+</section>
+
+<section id="phase4" class="phase">
+<div class="phase-title"><span>PHASE 4</span> Authorization & Permissions</div>
+<h3>Objective</h3>
+<p>Control what authenticated users can access and what operations they can perform.</p>
+<h3>Roles</h3>
+<table>
+<tr><th>Role</th><th>Core responsibility</th></tr>
+<tr><td>System Administrator</td><td>Platform configuration, users, permissions, security, audit logs and global settings.</td></tr>
+<tr><td>School Administrator</td><td>Students, teachers, parents, classes, subjects and school settings.</td></tr>
+<tr><td>Principal</td><td>Academic supervision, approvals, reports and school monitoring.</td></tr>
+<tr><td>Teacher</td><td>Assigned classes, subjects, attendance, assessments and results.</td></tr>
+<tr><td>Accountant</td><td>Fees, invoices, payments and financial reports.</td></tr>
+<tr><td>Librarian</td><td>Books, borrowing and returns.</td></tr>
+<tr><td>Student</td><td>Own profile, timetable, attendance, results and fees.</td></tr>
+<tr><td>Parent</td><td>Linked children, attendance, results, fees and notifications.</td></tr>
+</table>
+<h3>Authorization model</h3>
+<pre><code>User
+  ↓
+Role
+  ↓
+Permission
+  ↓
+Resource
+  ↓
+Action</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not treat hidden UI buttons as security.</li>
+<li>Do not authorize only inside React components.</li>
+<li>Do not allow direct requests to bypass server authorization.</li>
+</ul>
+<p><strong>Rule:</strong> Every protected server operation must verify authentication and authorization.</p>
+</section>
+
+<section id="phase5" class="phase">
+<div class="phase-title"><span>PHASE 5</span> School & System Administration</div>
+<h3>Objective</h3>
+<p>Create and configure the school environment in which the rest of the system operates.</p>
+<h3>Build</h3>
+<ul class="checklist">
+<li>School profile.</li>
+<li>School name and code.</li>
+<li>Logo.</li>
+<li>Address and contact information.</li>
+<li>Academic configuration.</li>
+<li>Grading configuration.</li>
+<li>School calendar.</li>
+<li>System settings.</li>
+<li>User management.</li>
+<li>Role management.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not let ordinary users change school-wide configuration.</li>
+<li>Do not let users assign themselves privileged roles.</li>
+<li>Do not allow unauthorized changes to grading settings.</li>
+<li>Do not allow users to alter another user's security settings without permission.</li>
+</ul>
+</section>
+
+<section id="phase6" class="phase">
+<div class="phase-title"><span>PHASE 6</span> Academic Structure</div>
+<h3>Objective</h3>
+<p>Build the academic framework required by students, teachers, attendance and results.</p>
+<h3>Implementation order</h3>
+<pre><code>Academic Year
+      ↓
+Terms
+      ↓
+Classes
+      ↓
+Streams
+      ↓
+Subjects
+      ↓
+Teacher Assignments
+      ↓
+Timetable
+      ↓
+Academic Calendar</code></pre>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Academic years.</li>
+<li>Terms.</li>
+<li>Classes.</li>
+<li>Streams.</li>
+<li>Subjects.</li>
+<li>Departments.</li>
+<li>Teacher assignments.</li>
+<li>Class teachers.</li>
+<li>Timetable.</li>
+<li>Academic calendar.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not model a student's class without considering the academic year and enrollment history.</li>
+<li>Do not assign teachers to nonexistent classes or subjects.</li>
+<li>Do not destroy previous academic-period relationships when a new period is created.</li>
+</ul>
+</section>
+
+<section id="phase7" class="phase">
+<div class="phase-title"><span>PHASE 7</span> Student Management</div>
+<h3>Objective</h3>
+<p>Implement the complete student lifecycle.</p>
+<h3>Student lifecycle</h3>
+<pre><code>Admission
+   ↓
+Registration
+   ↓
+Student ID
+   ↓
+Profile
+   ↓
+Enrollment
+   ↓
+Class Assignment
+   ↓
+Promotion / Transfer
+   ↓
+Withdrawal
+   ↓
+Graduation / Completion</code></pre>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Admission application.</li>
+<li>Student registration.</li>
+<li>Student ID generation.</li>
+<li>Student profile.</li>
+<li>Guardian information.</li>
+<li>Enrollment.</li>
+<li>Class assignment.</li>
+<li>Promotion.</li>
+<li>Transfer.</li>
+<li>Withdrawal.</li>
+<li>Graduation/completion.</li>
+<li>Student documents.</li>
+</ul>
+<h3>Pages</h3>
+<pre><code>/students
+/students/new
+/students/[id]
+/students/[id]/edit</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not overwrite historical enrollment data.</li>
+<li>Do not permanently replace a previous class record when a student changes class.</li>
+<li>Do not allow unauthorized users to edit student records.</li>
+</ul>
+</section>
+
+<section id="phase8" class="phase">
+<div class="phase-title"><span>PHASE 8</span> Teacher & Parent Management</div>
+<h3>Teacher Management</h3>
+<ul class="checklist">
+<li>Teacher registration.</li>
+<li>Teacher profile.</li>
+<li>Employee number.</li>
+<li>Qualifications.</li>
+<li>Subject assignment.</li>
+<li>Class assignment.</li>
+<li>Timetable.</li>
+<li>Teacher attendance.</li>
+</ul>
+<h3>Parent Management</h3>
+<ul class="checklist">
+<li>Parent registration.</li>
+<li>Guardian profile.</li>
+<li>Link parent to student.</li>
+<li>Support multiple children.</li>
+<li>Contact information.</li>
+<li>Parent notifications.</li>
+</ul>
+<div class="warning">
+<strong>Important relationship:</strong> One parent/guardian may be linked to multiple students. Do not design the relationship as one-parent-to-one-student.
+</div>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not assume one parent can have only one child.</li>
+<li>Do not allow teachers to access classes or subjects that are not assigned to them.</li>
+<li>Do not duplicate teacher or parent identity information unnecessarily.</li>
+</ul>
+</section>
+
+<section id="phase9" class="phase">
+<div class="phase-title"><span>PHASE 9</span> Attendance Management</div>
+<h3>Objective</h3>
+<p>Record and calculate student and teacher attendance from actual attendance transactions.</p>
+<h3>Workflow</h3>
+<div class="flow">
+<div class="flow-box">Teacher</div><div class="arrow">→</div>
+<div class="flow-box">Select Class/Date</div><div class="arrow">→</div>
+<div class="flow-box">Mark Attendance</div><div class="arrow">→</div>
+<div class="flow-box">Validate</div><div class="arrow">→</div>
+<div class="flow-box">Database</div><div class="arrow">→</div>
+<div class="flow-box">Reports/Alerts</div>
+</div>
+<h3>Required statuses</h3>
+<ul><li>Present</li><li>Absent</li><li>Late</li><li>Excused</li></ul>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Daily attendance.</li>
+<li>Class attendance.</li>
+<li>Teacher attendance.</li>
+<li>Attendance percentage.</li>
+<li>Attendance reports.</li>
+<li>Parent alerts.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not manually enter attendance percentages as the source of truth.</li>
+<li>Do not permit unauthorized teachers to modify another class's attendance.</li>
+<li>Do not silently create duplicate attendance records.</li>
+</ul>
+</section>
+
+<section id="phase10" class="phase">
+<div class="phase-title"><span>PHASE 10</span> Assessments & Examinations</div>
+<h3>Objective</h3>
+<p>Build the assessment and examination layer that feeds the results system.</p>
+<h3>Workflow</h3>
+<pre><code>Examination
+    ↓
+Subject
+    ↓
+Assessment Type
+    ↓
+Maximum Score
+    ↓
+Teacher Mark Entry
+    ↓
+Validation
+    ↓
+Approval</code></pre>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Examination creation.</li>
+<li>Examination schedules.</li>
+<li>Subjects.</li>
+<li>Assessment types.</li>
+<li>Maximum scores.</li>
+<li>Mark entry.</li>
+<li>Mark validation.</li>
+<li>Result approval.</li>
+<li>Result publication.</li>
+</ul>
+<h3>Validation example</h3>
+<pre><code>Assessment maximum = 20
+Submitted score    = 25
+
+Result:
+REJECT — score exceeds maximum.</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not trust scores supplied by the browser.</li>
+<li>Do not trust student IDs, subject IDs or assessment IDs supplied by the client without server validation.</li>
+<li>Do not let mark entry automatically publish results.</li>
+</ul>
+</section>
+
+<section id="phase11" class="phase">
+<div class="phase-title"><span>PHASE 11</span> Results & Report Cards</div>
+<h3>Objective</h3>
+<p>Implement the controlled process that converts marks into approved and published academic results.</p>
+<h3>Required workflow</h3>
+<div class="flow">
+<div class="flow-box">Assessment</div><div class="arrow">→</div>
+<div class="flow-box">Teacher Entry</div><div class="arrow">→</div>
+<div class="flow-box">Validation</div><div class="arrow">→</div>
+<div class="flow-box">Approval</div><div class="arrow">→</div>
+<div class="flow-box">Publication</div>
+</div>
+<h3>Result data</h3>
+<ul class="checklist">
+<li>Continuous assessment.</li>
+<li>Examination scores.</li>
+<li>Total scores.</li>
+<li>Grades.</li>
+<li>Average.</li>
+<li>Class position.</li>
+<li>Performance comments.</li>
+<li>Report cards.</li>
+<li>Result history.</li>
+</ul>
+<h3>Recommended status model</h3>
+<pre><code>Draft
+  ↓
+Submitted
+  ↓
+Validated
+  ↓
+Approved
+  ↓
+Published</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not expose draft results to students or parents.</li>
+<li>Do not let unauthorized teachers publish results.</li>
+<li>Do not calculate critical results only in the browser.</li>
+<li>Do not silently edit published results.</li>
+<li>Do not casually delete historical result records.</li>
+</ul>
+</section>
+
+<section id="phase12" class="phase">
+<div class="phase-title"><span>PHASE 12</span> Finance Management</div>
+<h3>Objective</h3>
+<p>Implement fees, invoices, payments, receipts and balances as transaction-based financial records.</p>
+<h3>Workflow</h3>
+<div class="flow">
+<div class="flow-box">Fee Structure</div><div class="arrow">→</div>
+<div class="flow-box">Invoice</div><div class="arrow">→</div>
+<div class="flow-box">Payment</div><div class="arrow">→</div>
+<div class="flow-box">Receipt</div>
+</div>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Fee categories.</li>
+<li>Fee structures.</li>
+<li>Invoices.</li>
+<li>Payments.</li>
+<li>Outstanding balances.</li>
+<li>Discounts.</li>
+<li>Scholarships.</li>
+<li>Receipts.</li>
+<li>Financial reports.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not overwrite payment history.</li>
+<li>Do not change balances without an underlying transaction or correction process.</li>
+<li>Do not allow unauthorized users to create or modify financial transactions.</li>
+</ul>
+</section>
+
+<section id="phase13" class="phase">
+<div class="phase-title"><span>PHASE 13</span> Library Management</div>
+<h3>Objective</h3>
+<p>Manage library resources and borrowing transactions.</p>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Book catalog.</li>
+<li>Book categories.</li>
+<li>Authors.</li>
+<li>Book copies.</li>
+<li>Borrowing.</li>
+<li>Returns.</li>
+<li>Overdue books.</li>
+<li>Library reports.</li>
+</ul>
+<h3>Workflow</h3>
+<pre><code>Book
+  ↓
+Available Copy
+  ↓
+Borrow
+  ↓
+Borrowing Record
+  ↓
+Return
+  ↓
+Availability Updated</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not update quantity without maintaining transaction history.</li>
+<li>Do not lose information about who borrowed a book and when.</li>
+<li>Do not treat a returned book as a new book record.</li>
+</ul>
+</section>
+
+<section id="phase14" class="phase">
+<div class="phase-title"><span>PHASE 14</span> Inventory Management</div>
+<h3>Objective</h3>
+<p>Track school inventory and stock movements.</p>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Inventory items.</li>
+<li>Categories.</li>
+<li>Suppliers.</li>
+<li>Purchases.</li>
+<li>Stock levels.</li>
+<li>Stock movements.</li>
+<li>Low-stock alerts.</li>
+</ul>
+<h3>Correct model</h3>
+<pre><code>Purchase
+   ↓
+Stock Movement
+   ↓
+Current Stock
+   ↓
+Usage / Issue
+   ↓
+Stock Movement
+   ↓
+Updated Stock</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not rely on a single manually overwritten quantity as the complete inventory history.</li>
+<li>Do not delete stock movement history.</li>
+<li>Do not allow unauthorized stock adjustments.</li>
+</ul>
+</section>
+
+<section id="phase15" class="phase">
+<div class="phase-title"><span>PHASE 15</span> Communication & Notifications</div>
+<h3>Objective</h3>
+<p>Provide internal communication and prepare the system for external communication integrations.</p>
+<h3>Required functionality</h3>
+<ul class="checklist">
+<li>Announcements.</li>
+<li>Notifications.</li>
+<li>Class announcements.</li>
+<li>Parent notifications.</li>
+<li>Teacher notifications.</li>
+<li>Student notifications.</li>
+<li>Email integration readiness.</li>
+<li>SMS integration readiness.</li>
+</ul>
+<h3>Recommended first implementation</h3>
+<pre><code>Notification
+   ↓
+Recipient
+   ↓
+Read / Unread
+   ↓
+Notification History</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not make external email/SMS services the foundation of the core application.</li>
+<li>Do not make the system unusable when an external notification provider is unavailable.</li>
+<li>Do not send notifications without checking the recipient and relevant permissions.</li>
+</ul>
+</section>
+
+<section id="phase16" class="phase">
+<div class="phase-title"><span>PHASE 16</span> Reports & Analytics</div>
+<h3>Objective</h3>
+<p>Turn functioning module data into reliable reports and dashboards.</p>
+<h3>Required reports</h3>
+<ul class="checklist">
+<li>Student enrollment reports.</li>
+<li>Attendance reports.</li>
+<li>Academic performance.</li>
+<li>Class performance.</li>
+<li>Teacher reports.</li>
+<li>Fee collection.</li>
+<li>Outstanding fees.</li>
+<li>Inventory reports.</li>
+<li>Library reports.</li>
+<li>School statistics.</li>
+</ul>
+<h3>Data principle</h3>
+<pre><code>Actual Records
+      ↓
+Server-side Query
+      ↓
+Aggregation / Calculation
+      ↓
+Report
+      ↓
+Dashboard / Export</code></pre>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not use hard-coded dashboard numbers.</li>
+<li>Do not build analytics on top of incomplete or fake data.</li>
+<li>Do not duplicate business calculations in multiple unrelated pages.</li>
+</ul>
+<h3>Dashboard principle</h3>
+<p>Use a shared dashboard architecture that changes the displayed information according to the authenticated user's role and permissions.</p>
+</section>
+
+<section id="phase17" class="phase">
+<div class="phase-title"><span>PHASE 17</span> Security, Audit & Data Integrity</div>
+<h3>Objective</h3>
+<p>Perform the comprehensive security and integrity pass across the complete application.</p>
+<h3>Security layers</h3>
+<pre><code>Request
+  ↓
+Authenticate
+  ↓
+Authorize
+  ↓
+Validate Input
+  ↓
+Apply Business Rules
+  ↓
+Database Transaction
+  ↓
+Audit Sensitive Action
+  ↓
+Response</code></pre>
+<h3>Audit events</h3>
+<ul class="checklist">
+<li>Login/logout.</li>
+<li>User changes.</li>
+<li>Student changes.</li>
+<li>Result entry.</li>
+<li>Result approval.</li>
+<li>Result publication.</li>
+<li>Payment creation.</li>
+<li>Settings changes.</li>
+<li>Data deletion.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Never use hidden UI elements as the only security control.</li>
+<li>Never expose database credentials or private secrets to the browser.</li>
+<li>Never trust client-side validation as the only validation layer.</li>
+<li>Never permit critical operations without authorization checks.</li>
+</ul>
+</section>
+
+<section id="phase18" class="phase">
+<div class="phase-title"><span>PHASE 18</span> Testing & Quality Assurance</div>
+<h3>Objective</h3>
+<p>Verify that the system works correctly, securely and consistently before production.</p>
+<h3>Authentication tests</h3>
+<ul><li>Valid login</li><li>Invalid login</li><li>Logout</li><li>Password reset</li><li>Session expiry</li><li>Suspended account</li></ul>
+<h3>Authorization tests</h3>
+<p>Test every role against protected operations. Verify both allowed and denied operations.</p>
+<h3>Student tests</h3>
+<ul><li>Admission</li><li>Registration</li><li>Enrollment</li><li>Transfer</li><li>Promotion</li><li>Withdrawal</li></ul>
+<h3>Attendance tests</h3>
+<ul><li>Duplicate attendance</li><li>Invalid student</li><li>Invalid class</li><li>Invalid date</li><li>Unauthorized teacher</li></ul>
+<h3>Results tests</h3>
+<ul><li>Invalid mark</li><li>Score above maximum</li><li>Duplicate mark</li><li>Unauthorized modification</li><li>Approval</li><li>Publication</li><li>Grade calculation</li><li>Average calculation</li><li>Position calculation</li></ul>
+<h3>Finance tests</h3>
+<ul><li>Payment creation</li><li>Balance calculation</li><li>Receipt generation</li><li>Duplicate transaction protection</li><li>Invalid amount</li></ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not test only the visual interface.</li>
+<li>Do not consider a page complete because it renders without an error.</li>
+<li>Do not skip critical business-logic tests.</li>
+</ul>
+</section>
+
+<section id="phase19" class="phase">
+<div class="phase-title"><span>PHASE 19</span> Deployment, Backup & Monitoring</div>
+<h3>Objective</h3>
+<p>Prepare the complete system for reliable production operation.</p>
+<h3>Deployment architecture</h3>
+<pre><code>INTERNET
+    ↓
+HTTPS / CDN
+    ↓
+NEXT.JS APPLICATION
+    ↓
+PRISMA
+    ↓
+POSTGRESQL
+
+        ↘
+       File Storage</code></pre>
+<h3>Production requirements</h3>
+<ul class="checklist">
+<li>Production Next.js application.</li>
+<li>Managed PostgreSQL database.</li>
+<li>Object/file storage where needed.</li>
+<li>HTTPS.</li>
+<li>Environment variables.</li>
+<li>Database backups.</li>
+<li>Monitoring.</li>
+<li>Application logging.</li>
+<li>Database migration strategy.</li>
+</ul>
+<h3>Backup and recovery</h3>
+<ul class="checklist">
+<li>Automated PostgreSQL backups.</li>
+<li>Encrypted backups.</li>
+<li>Backup retention.</li>
+<li>Database restoration procedures.</li>
+<li>Disaster recovery plan.</li>
+<li>Audit trail preservation.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not treat a Git push as proof of production readiness.</li>
+<li>Do not deploy without a database backup strategy.</li>
+<li>Do not use production credentials in development.</li>
+<li>Do not deploy without environment-variable protection.</li>
+<li>Do not skip migration planning.</li>
+</ul>
+</section>
+
+<section id="phase20" class="phase">
+<div class="phase-title"><span>PHASE 20</span> Future Enhancements</div>
+<h3>Objective</h3>
+<p>Keep the core system stable before expanding it into additional product areas.</p>
+<h3>Future scope from the SRS</h3>
+<ul>
+<li>Mobile application.</li>
+<li>Online learning.</li>
+<li>AI student analytics.</li>
+<li>AI school assistant.</li>
+<li>Biometric attendance.</li>
+<li>Transport management.</li>
+<li>Hostel management.</li>
+<li>Payroll.</li>
+<li>Mobile money integration.</li>
+</ul>
+<h3>Additional future enhancements</h3>
+<ul>
+<li>Installable PWA.</li>
+<li>Offline attendance.</li>
+<li>Push notifications.</li>
+<li>Mobile-friendly teacher workflows.</li>
+<li>Student performance analysis.</li>
+<li>At-risk student identification.</li>
+<li>Attendance analytics.</li>
+<li>Online payments and reconciliation.</li>
+<li>Learning management system.</li>
+<li>Online assignments.</li>
+<li>Digital examinations.</li>
+</ul>
+<h3>What NOT to do</h3>
+<ul class="donot">
+<li>Do not start AI, biometric, transport, hostel, payroll or LMS work while core modules remain incomplete.</li>
+<li>Do not let future features destabilize the core school-management workflows.</li>
+<li>Do not expand scope without evaluating its effect on the existing architecture.</li>
+</ul>
+</section>
+
+<section id="completion">
+<h2>3. Definition of a Completed Module</h2>
+<p>A page existing in the application does not mean that the module is complete.</p>
+<table>
+<tr><th>Level</th><th>Meaning</th></tr>
+<tr><td>Level 1 — UI</td><td>The page and interface exist.</td></tr>
+<tr><td>Level 2 — Functional</td><td>The page can perform its intended operations.</td></tr>
+<tr><td>Level 3 — Data Connected</td><td>Operations persist correctly in PostgreSQL.</td></tr>
+<tr><td>Level 4 — Secure</td><td>Authentication, authorization and server-side validation are enforced.</td></tr>
+<tr><td>Level 5 — Production Ready</td><td>Error handling, audit logging where required, testing, performance, responsiveness and accessibility are addressed.</td></tr>
+</table>
+
+<div class="success">
+<strong>Completion rule:</strong> A module should be marked complete only after it reaches the required functional,
+data, security and quality levels—not merely because its route or UI has been created.
+</div>
+</section>
+
+<section id="milestones">
+<h2>4. Major Development Milestones</h2>
+<div class="card-grid">
+<div class="card">
+<h3>Milestone 1 — Foundation</h3>
+<p><strong>Phases 1–4</strong></p>
+<p>Next.js application connected to PostgreSQL with authentication, roles and authorization.</p>
+</div>
+<div class="card">
+<h3>Milestone 2 — School Core</h3>
+<p><strong>Phases 5–8</strong></p>
+<p>School configuration, academic structure, students, teachers and parents are functional.</p>
+</div>
+<div class="card">
+<h3>Milestone 3 — Academic Operations</h3>
+<p><strong>Phases 9–11</strong></p>
+<p>Attendance, assessments, examinations and results work as connected workflows.</p>
+</div>
+<div class="card">
+<h3>Milestone 4 — Administration</h3>
+<p><strong>Phases 12–15</strong></p>
+<p>Finance, library, inventory and communication are operational.</p>
+</div>
+<div class="card">
+<h3>Milestone 5 — Production</h3>
+<p><strong>Phases 16–19</strong></p>
+<p>Reports, security, audit, testing, deployment, backup and monitoring are complete.</p>
+</div>
+<div class="card">
+<h3>Milestone 6 — Expansion</h3>
+<p><strong>Phase 20</strong></p>
+<p>Future enhancements can be added after the core system is stable.</p>
+</div>
+</div>
+</section>
+
+<section id="architecture">
+<h2>5. Final Architecture</h2>
+<pre><code>                         SCHOOL MANAGEMENT SYSTEM
+
+                                  USERS
+                                    |
+                                    v
+                          ┌─────────────────────┐
+                          │       NEXT.JS       │
+                          │                     │
+                          │ App Router          │
+                          │ Server Components   │
+                          │ Server Actions      │
+                          │ Route Handlers      │
+                          │ Middleware          │
+                          │ Authentication      │
+                          │ Authorization       │
+                          └──────────┬──────────┘
+                                     |
+                                     v
+                          ┌─────────────────────┐
+                          │   BUSINESS LOGIC    │
+                          └──────────┬──────────┘
+                                     |
+                                     v
+                          ┌─────────────────────┐
+                          │       PRISMA        │
+                          └──────────┬──────────┘
+                                     |
+                                     v
+                          ┌─────────────────────┐
+                          │     POSTGRESQL      │
+                          └─────────────────────┘</code></pre>
+
+<h3>Technology responsibilities</h3>
+<table>
+<tr><th>Technology</th><th>Primary responsibility</th></tr>
+<tr><td>Next.js</td><td>Full-stack application framework, routing, rendering, server operations and API route handlers.</td></tr>
+<tr><td>TypeScript</td><td>Type-safe application development.</td></tr>
+<tr><td>React</td><td>User interface.</td></tr>
+<tr><td>PostgreSQL</td><td>Persistent relational data storage.</td></tr>
+<tr><td>Prisma</td><td>Type-safe database access and migrations.</td></tr>
+<tr><td>Tailwind CSS</td><td>UI styling.</td></tr>
+<tr><td>Zod</td><td>Input validation.</td></tr>
+<tr><td>React Hook Form</td><td>Form management.</td></tr>
+<tr><td>Recharts</td><td>Charts and analytics.</td></tr>
+<tr><td>GitHub</td><td>Source control.</td></tr>
+</table>
+
+<h2>6. Final Development Rule</h2>
+<div class="highlight">
+<p>
+<strong>Build the system from its dependencies outward.</strong>
+Do not jump from page to page based only on what is visible in the UI.
+First establish the foundation and data model, then identity and permissions, then academic structure,
+then people and academic operations, then administrative modules, and finally reports, security,
+testing and production infrastructure.
+</p>
+<p>
+Every module must be connected to the real database, protected by server-side authorization,
+validated on the server, tested against its business rules, and integrated with the rest of the system
+before it is considered complete.
+</p>
+</div>
+
+<footer>
+<strong>School Management System — Complete Development Plan</strong>
+<p>Derived from the School Management System Software Requirements Specification, Version 1.0</p>
+<p>Next.js Full-Stack Architecture | Primary & Secondary School Management Platform</p>
+</footer>
+
+</main>
+</div>
+</body>
+</html>
