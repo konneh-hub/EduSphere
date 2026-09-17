@@ -5,7 +5,6 @@ on:
     paths:
       - "prisma/**"
       - "package.json"
-      - "package-lock.json"
       - ".github/workflows/database.yml"
   push:
     branches:
@@ -14,7 +13,6 @@ on:
     paths:
       - "prisma/**"
       - "package.json"
-      - "package-lock.json"
       - ".github/workflows/database.yml"
 
 jobs:
@@ -31,7 +29,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Validate Prisma schema
         run: npm run db:validate
