@@ -1,44 +1,113 @@
-# EduSphere
+﻿# EduSphere
 
-EduSphere is a multi-tenant school management platform for primary and secondary schools. The application uses a single Next.js full-stack application with PostgreSQL and Prisma, with school ownership represented explicitly in the data model.
+EduSphere is a multi-school school management system built with Next.js, TypeScript, PostgreSQL, and Prisma. The repository currently implements the project foundation and the database model required by the system requirements specification (SRS), while leaving business workflows, authentication, and module-specific APIs for later implementation phases.
 
-## Phase 1 — Foundation
+## Project purpose
 
-The `phase-1-foundation` branch establishes the Next.js App Router foundation, shared layouts, UI directories, route boundaries, API conventions and application states without implementing business workflows.
+The system supports a modern school platform for primary and secondary institutions, covering:
 
-## Phase 2 — Full database foundation
+- school administration and tenant structure
+- user roles and permissions
+- student and parent management
+- academic structure and enrollments
+- attendance and assessments
+- examinations and results
+- finance and invoicing
+- library and inventory
+- notifications and communication
+- reports and system administration
 
-The database layer has now been expanded to cover the SRS core scope. The SRS defines PostgreSQL as the relational database and Prisma as the ORM, and requires centralized school data, secure role-based access and relational data integrity.
+## SRS and project documentation
 
-### Prisma organization
+This repository includes the core planning and requirements material for the system:
 
-The Prisma schema is organized into multiple `.prisma` files under `prisma/` while keeping `prisma/schema.prisma` as the main generator/datasource file.
+- [src/doc/EduSphere-SRS-v2.0.docx](src/doc/EduSphere-SRS-v2.0.docx) — the main software requirements specification for the school management system
+- [src/doc/School_Management_System_Development_Plan.html](src/doc/School_Management_System_Development_Plan.html) — the implementation roadmap derived from the SRS
+- [prisma/README.md](prisma/README.md) — database foundation and Prisma-specific setup notes
+
+## Current implementation status
+
+This repository is at the foundation/database phase and intentionally does not yet include complete business workflows.
+
+### Implemented in this repository
+
+- Next.js App Router project structure
+- TypeScript configuration and app shell
+- Dashboard and landing pages
+- shared layout and route boundaries
+- Prisma multi-file schema foundation
+- PostgreSQL schema modeling for the core SRS entities
+- health check endpoint for database connectivity
+- API response conventions
+
+### Not yet implemented
+
+- authentication and session management
+- role-based authorization enforcement
+- school onboarding workflows
+- student admissions workflows
+- attendance processing workflows
+- examination/result processing
+- fee payment workflows
+- notification delivery
+- reporting APIs and analytics
+- production-ready seed data or demo data
+
+## Tech stack
+
+- Next.js 16
+- React 19
+- TypeScript
+- PostgreSQL
+- Prisma ORM
+- Tailwind CSS
+
+## Repository structure
 
 ```text
-prisma/
-├── schema.prisma
-├── core.prisma
-├── academic.prisma
-├── finance.prisma
-├── library-inventory.prisma
-├── system.prisma
-└── README.md
+.
+├── prisma/
+│   ├── schema.prisma
+│   ├── core.prisma
+│   ├── academic.prisma
+│   ├── finance.prisma
+│   ├── library-inventory.prisma
+│   ├── system.prisma
+│   └── README.md
+├── src/
+│   ├── app/
+│   ├── components/
+│   ├── config/
+│   ├── doc/
+│   ├── lib/
+│   └── types/
+├── .env.example
+├── README.md
+├── package.json
+├── next.config.ts
+├── tsconfig.json
+└── eslint.config.mjs
 ```
 
-### Database coverage
+## Environment setup
 
-The database includes schools, users, roles, permissions, students, parents/guardians, teachers, departments, classes, streams, subjects, academic years, terms, admissions, attendance, timetables, assessments, examinations, marks, results, report cards, grading policies, promotion, transfer, withdrawal, fees, discounts, scholarships, invoices, payments, receipts, library, inventory, announcements, notifications, settings, documents and audit logs.
-
-### Tenant/data isolation foundation
-
-`School` is the top-level school ownership boundary. School-owned records carry a direct school relationship or belong to a school-owned parent record. Authentication and authorization must derive the active school from the authenticated server-side context and must not trust arbitrary school IDs supplied by clients.
-
-### Database commands
+1. Copy `.env.example` to `.env.local`
+2. Set `DATABASE_URL` to your PostgreSQL connection string
+3. Install the required dependencies:
 
 ```bash
 npm install
-npm run db:validate
+```
+
+4. Generate Prisma client:
+
+```bash
 npm run db:generate
+```
+
+5. Apply the current schema locally:
+
+```bash
 npm run db:push
 ```
 
@@ -48,69 +117,46 @@ For versioned development migrations:
 npm run db:migrate
 ```
 
-For Prisma Studio:
+To open Prisma Studio:
 
 ```bash
 npm run db:studio
 ```
 
-No production database credentials or seed records are committed.
+To validate the Prisma schema:
 
-### CI validation
-
-`.github/workflows/database.yml` validates the Prisma schema and generates Prisma Client on relevant pushes and pull requests.
-
-## Phase 3 — Authentication and authorization foundation
-
-The same branch now contains the initial security foundation:
-
-- Password hashing and verification with bcrypt.
-- Signed, HTTP-only, same-site session cookies using `jose`.
-- School-scoped login using school code + email + password.
-- Account status enforcement before session creation.
-- Server-side dashboard protection that redirects unauthenticated users to `/login`.
-- Server-side permission lookup through the existing `RolePermission` model.
-- Login and logout audit events through the existing `AuditLog` model.
-- Last-login timestamp updates.
-- No public registration, password reset workflow, demo credentials or fake users have been added.
-
-### Authentication environment
-
-`.env.example` contains `AUTH_SECRET`. Set a cryptographically random value of at least 32 characters in `.env.local` before using authentication.
-
-Example PowerShell command:
-
-```powershell
-$bytes = New-Object byte[] 32
-[System.Security.Cryptography.RandomNumberGenerator]::Create().GetBytes($bytes)
-[Convert]::ToBase64String($bytes)
+```bash
+npm run db:validate
 ```
-
-The generated value should be assigned to `AUTH_SECRET`; do not commit it.
 
 ## API health check
 
-`GET /api/health` performs a real PostgreSQL connectivity check. It returns `503` when the database is not configured or unavailable; it does not fabricate a healthy database state.
+The application exposes a real database connectivity check at:
 
-## API convention
+- `GET /api/health`
 
-API Route Handlers live under `src/app/api`. Responses use a consistent envelope:
+Behavior:
 
-```json
-{ "success": true, "data": {} }
-```
+- returns `503` if `DATABASE_URL` is missing
+- returns `503` if PostgreSQL is unavailable
+- otherwise returns a healthy response payload
 
-or:
+## Security and data boundary
 
-```json
-{
-  "success": false,
-  "error": { "code": "ERROR_CODE", "message": "Human-readable message" }
-}
-```
+The system follows the SRS direction that school ownership is explicit and tenant-aware. The data model keeps `School` as the top-level ownership boundary, and future authentication and authorization layers must enforce school-scoped access on the server side rather than trusting client-supplied school IDs.
 
-## Current scope boundary
+## Development principle
 
-The current implementation establishes the foundation, relational database and authentication/session security layers. It does **not** yet implement school/user CRUD services, admissions workflows, attendance workflows, examination processing, result approval workflows, payment processing, notification delivery or reporting APIs.
+The repository follows the SRS-driven development sequence:
 
-There is intentionally no fake business data, demo users, fake schools, fake students or simulated dashboard statistics.
+1. foundation and architecture
+2. database and Prisma modeling
+3. authentication and authorization
+4. academic and operational modules
+5. reporting, security, and deployment readiness
+
+## Notes
+
+- no production secrets or credentials should be committed
+- no demo school/user records are included in this foundation phase
+- this project is intentionally structured so later modules can be added in planned, dependency-safe phases
