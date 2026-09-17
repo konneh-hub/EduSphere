@@ -12,6 +12,11 @@ type AuditInput = {
   userAgent?: string;
 };
 
+function toJsonValue(value: unknown) {
+  if (value === undefined) return undefined;
+  return JSON.parse(JSON.stringify(value));
+}
+
 export async function writeAuditLog(input: AuditInput) {
   const user = await getCurrentUser();
 
@@ -23,8 +28,8 @@ export async function writeAuditLog(input: AuditInput) {
       module: input.module,
       entity: input.entity,
       entityId: input.entityId,
-      oldValue: input.oldValue === undefined ? undefined : JSON.parse(JSON.stringify(input.oldValue)),
-      newValue: input.newValue === undefined ? undefined : JSON.parse(JSON.stringify(input.newValue)),
+      oldValue: toJsonValue(input.oldValue),
+      newValue: toJsonValue(input.newValue),
       ipAddress: input.ipAddress,
       userAgent: input.userAgent,
     },
