@@ -5,7 +5,7 @@ export async function getCurrentUser() {
   const session = await getSession();
   if (!session) return null;
 
-  const user = await prisma.user.findFirst({
+  return prisma.user.findFirst({
     where: {
       id: session.userId,
       schoolId: session.schoolId,
@@ -18,16 +18,10 @@ export async function getCurrentUser() {
       name: true,
       email: true,
       status: true,
-      role: {
-        select: { id: true, name: true },
-      },
-      school: {
-        select: { id: true, name: true, code: true },
-      },
+      role: { select: { id: true, name: true } },
+      school: { select: { id: true, name: true, code: true } },
     },
   });
-
-  return user;
 }
 
 export async function hasPermission(resource: string, action: string) {
@@ -58,5 +52,13 @@ export async function requirePermissionOrThrow(resource: string, action: string)
   });
 
   if (!allowed) throw new Error("FORBIDDEN");
+  return user;
+}
+
+export async function requireRole(...roleNames: string[]) {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("UNAUTHENTICATED");
+
+  if (!roleNames.includes(user.role.name)) throw new Error("FORBIDDEN");
   return user;
 }
