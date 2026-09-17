@@ -27,6 +27,8 @@ model School {
   subjects Subject[]
   academicYears AcademicYear[]
   admissions Admission[]
+  examinations Examination[]
+  timetable TimetableEntry[]
   fees Fee[]
   feeCategories FeeCategory[]
   books Book[]
@@ -179,6 +181,7 @@ model Teacher {
   assignments TeacherAssignment[]
   qualifications TeacherQualification[]
   attendance TeacherAttendance[]
+  timetable TimetableEntry[]
   documents Document[] @relation("TeacherDocuments")
   @@unique([schoolId, employeeNo])
 }
