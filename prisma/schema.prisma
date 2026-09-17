@@ -83,22 +83,22 @@ model School {
 }
 
 model Role {
-  id          String       @id @default(uuid()) @db.Uuid
-  name        String       @unique
+  id          String           @id @default(uuid()) @db.Uuid
+  name        String           @unique
   description String?
   users       User[]
   permissions RolePermission[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 }
 
 model Permission {
-  id          String       @id @default(uuid()) @db.Uuid
+  id          String           @id @default(uuid()) @db.Uuid
   resource    String
   action      String
   description String?
   roles       RolePermission[]
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime         @default(now())
 
   @@unique([resource, action])
 }
@@ -113,20 +113,20 @@ model RolePermission {
 }
 
 model User {
-  id             String       @id @default(uuid()) @db.Uuid
-  schoolId       String       @db.Uuid
-  roleId         String       @db.Uuid
-  name           String
-  email          String?
-  phone          String?
-  passwordHash   String?
-  status         UserStatus   @default(ACTIVE)
+  id              String       @id @default(uuid()) @db.Uuid
+  schoolId        String       @db.Uuid
+  roleId          String       @db.Uuid
+  name            String
+  email           String?
+  phone           String?
+  passwordHash    String?
+  status          UserStatus   @default(ACTIVE)
   emailVerifiedAt DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
-  school         School       @relation(fields: [schoolId], references: [id], onDelete: Restrict)
-  role           Role         @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  school         School          @relation(fields: [schoolId], references: [id], onDelete: Restrict)
+  role           Role            @relation(fields: [roleId], references: [id], onDelete: Restrict)
   student        Student?
   parent         Parent?
   teacher        Teacher?
@@ -211,16 +211,16 @@ model Teacher {
 }
 
 model SchoolClass {
-  id           String          @id @default(uuid()) @db.Uuid
-  schoolId     String          @db.Uuid
+  id           String              @id @default(uuid()) @db.Uuid
+  schoolId     String              @db.Uuid
   name         String
   level        String?
   section      String?
   capacity     Int?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
-  school       School          @relation(fields: [schoolId], references: [id], onDelete: Restrict)
+  school       School              @relation(fields: [schoolId], references: [id], onDelete: Restrict)
   enrollments  Enrollment[]
   assignments  TeacherAssignment[]
   attendance   Attendance[]
@@ -231,15 +231,15 @@ model SchoolClass {
 }
 
 model Subject {
-  id           String          @id @default(uuid()) @db.Uuid
-  schoolId     String          @db.Uuid
+  id           String              @id @default(uuid()) @db.Uuid
+  schoolId     String              @db.Uuid
   name         String
   code         String
   description  String?
-  createdAt    DateTime        @default(now())
-  updatedAt    DateTime        @updatedAt
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 
-  school       School          @relation(fields: [schoolId], references: [id], onDelete: Restrict)
+  school       School              @relation(fields: [schoolId], references: [id], onDelete: Restrict)
   assignments  TeacherAssignment[]
   assessments  Assessment[]
   results      Result[]
@@ -264,16 +264,16 @@ model TeacherAssignment {
 }
 
 model AcademicYear {
-  id          String      @id @default(uuid()) @db.Uuid
-  schoolId    String      @db.Uuid
+  id          String         @id @default(uuid()) @db.Uuid
+  schoolId    String         @db.Uuid
   name        String
   startDate   DateTime
   endDate     DateTime
-  isCurrent   Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  isCurrent   Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
 
-  school      School      @relation(fields: [schoolId], references: [id], onDelete: Restrict)
+  school      School         @relation(fields: [schoolId], references: [id], onDelete: Restrict)
   terms       Term[]
   enrollments Enrollment[]
   fees        Fee[]
@@ -306,13 +306,13 @@ model Enrollment {
   studentId      String       @db.Uuid
   classId        String       @db.Uuid
   academicYearId String       @db.Uuid
-  termId         String?      @db.Uuid
+  termId         String       @db.Uuid
   enrolledAt     DateTime     @default(now())
 
   student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
   class          SchoolClass  @relation(fields: [classId], references: [id], onDelete: Restrict)
   academicYear   AcademicYear @relation(fields: [academicYearId], references: [id], onDelete: Restrict)
-  term           Term?        @relation(fields: [termId], references: [id], onDelete: Restrict)
+  term           Term         @relation(fields: [termId], references: [id], onDelete: Restrict)
 
   @@unique([studentId, classId, academicYearId, termId])
   @@index([classId, academicYearId])
@@ -471,16 +471,16 @@ model Borrowing {
 }
 
 model Notification {
-  id          String      @id @default(uuid()) @db.Uuid
-  schoolId    String      @db.Uuid
-  userId      String?     @db.Uuid
+  id          String       @id @default(uuid()) @db.Uuid
+  schoolId    String       @db.Uuid
+  userId      String?      @db.Uuid
   title       String
   message     String
   readAt      DateTime?
-  createdAt   DateTime    @default(now())
+  createdAt   DateTime     @default(now())
 
-  school      School      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  user        User?       @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  school      School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  user        User?        @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([schoolId, createdAt])
   @@index([userId, readAt])
