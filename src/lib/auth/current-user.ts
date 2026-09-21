@@ -1,12 +1,43 @@
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth/session";
 
 export async function getCurrentUser() {
-  const session = await getSession();
-  if (!session) return null;
+  const { userId } = await auth();
+  if (!userId) return null;
 
-  return prisma.user.findFirst({
-    where: { id: session.userId, schoolId: session.schoolId, status: "ACTIVE" },
+  const linkedUser = await prisma.user.findUnique({
+    where: { clerkUserId: userId },
+    select: {
+      id: true,
+      schoolId: true,
+      roleId: true,
+      name: true,
+      email: true,
+      status: true,
+      role: { select: { id: true, name: true } },
+      school: { select: { id: true, name: true, code: true } },
+    },
+  });
+
+  if (linkedUser?.status === "ACTIVE") return linkedUser;
+
+  const clerkProfile = await currentUser();
+  const primaryEmail = clerkProfile?.emailAddresses.find(
+    (email) => email.id === clerkProfile.primaryEmailAddressId && email.verification?.status === "verified",
+  )?.emailAddress;
+
+  if (!primaryEmail) return null;
+
+  const matchingUsers = await prisma.user.findMany({
+    where: { email: primaryEmail.toLowerCase(), status: "ACTIVE", clerkUserId: null },
+    select: { id: true },
+  });
+
+  if (matchingUsers.length !== 1) return null;
+
+  return prisma.user.update({
+    where: { id: matchingUsers[0].id },
+    data: { clerkUserId: userId, emailVerifiedAt: new Date(), lastLoginAt: new Date() },
     select: {
       id: true,
       schoolId: true,

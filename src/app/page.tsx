@@ -16,7 +16,7 @@ export default function Home() {
             href="/login"
             className="rounded-lg bg-[var(--primary)] px-5 py-3 text-sm font-semibold text-white hover:opacity-90"
           >
-            Sign in
+            Sign in with Clerk
           </Link>
           <a
             href="/api/health"
